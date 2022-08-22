@@ -1,0 +1,45 @@
+﻿
+
+<html>
+<body>
+    <form id="ImportExcel" asp-action="ImportExcel" asp-controller="ProjectsDocumentations" method="post" enctype="multipart/form-data">
+        <label for="ExcelFile" style="margin-left:5px; display:inline" class="btn btn-success btn-create  pull-right">Import Excel</label>
+        <div id="Loader" class="loader pull-right" style="visibility:hidden; margin-left:20px"></div>
+        <input id="ExcelFile" type="file" name="ExcelFile" style="visibility:hidden;display:inline" />
+    </form>
+</body>
+</html>
+
+<script>
+    $('#ExcelFile').change(function () {
+        $('#Loader').css("visibility", "visible");
+        var FormFile = new FormData();
+        FormFile.append('ExcelFile', $('#ExcelFile')[0].files[0]);
+
+        //for (var i = 0; i != files.length; i++) { formData.append("files", files[i]); } //If User Selected Multiple Files
+
+        $.ajax({
+            url: '/ProjectsDocumentations/ImportExcel',
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            data: FormFile,
+            success: function (Response) {
+                $('#Loader').css("visibility", "hidden");
+                $('#ExcelFile').val("");
+                alert('تعداد ' + JSON.stringify(Response.result) + ' با موفقیت وارد شد!');
+            }
+        });
+    });
+</script>
+
+<style>
+    .loader {
+        border: 4px solid #f3f3f3; /* Light grey */
+        border-top: 4px solid #32CD32; /* Green */
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        animation: spin 1s linear infinite;
+    }
+</style>

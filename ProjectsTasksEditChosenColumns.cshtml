@@ -1,0 +1,246 @@
+﻿@model Dapna.MSVPortal.Web.ViewModels.ChosenColumnsViewModel
+
+@{
+    ViewBag.CurrentPageName = PageNames.ProjectsTasksEditChosenColumns; // The menu item will be active for this page.
+}
+
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h2>
+                            انتخاب ستون ها
+                        </h2>
+                    </div>
+                    <div class="col-md-8">
+                    </div>
+                </div>
+
+            </div>
+            <div class="body">
+
+                @using (Html.BeginForm("AddOrUpdateChosenColumns", "ProjectsDocumentations", FormMethod.Post, new { @class = "", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(Model => Model.TableID, new { @id = "TableID" })
+                <div class="modal-body">
+                    <div class="row" style="visibility:hidden">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            @Html.CheckBoxFor(Model => Model.Column1, new { @class = "form-control", @id = "CheckBox-TaskID" })
+                            <label for="CheckBox-TaskID"> TaskID </label>
+                            <div class="form-group">
+                                <div class="form-line"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            @Html.CheckBoxFor(Model => Model.Column3, new { @class = "form-control", @id = "Checkbox-ProjectCode" })
+                            <label for="Checkbox-ProjectCode"> Project Code </label>
+                            <div class="form-group">
+                                <div class="form-line"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            @Html.CheckBoxFor(Model => Model.Column4, new { @class = "form-control", @id = "Checkbox-CompanyName" })
+                            <label for="Checkbox-CompanyName"> CompanyName </label>
+                            <div class="form-group">
+                                <div class="form-line"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            @Html.CheckBoxFor(Model => Model.Column5, new { @class = "form-control", @id = "Checkbox-DocumentTitle" })
+                            <label for="Checkbox-DocumentTitle"> Document Title </label>
+                            <div class="form-group">
+                                <div class="form-line"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            @Html.CheckBoxFor(Model => Model.Column6, new { @class = "form-control", @id = "Checkbox-DocumentNumber" })
+                            <label for="Checkbox-DocumentNumber"> Document Number </label>
+                            <div class="form-group">
+                                <div class="form-line"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            @Html.CheckBoxFor(Model => Model.Column7, new { @class = "form-control", @id = "Checkbox-Dicipline" })
+                            <label for="Checkbox-Dicipline"> Dicipline </label>
+                            <div class="form-group">
+                                <div class="form-line"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            @Html.CheckBoxFor(Model => Model.Column8, new { @class = "form-control", @id = "Checkbox-ResponsiblePerson" })
+                            <label for="Checkbox-ResponsiblePerson"> ResponsiblePerson </label>
+                            <div class="form-group">
+                                <div class="form-line"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            @Html.CheckBoxFor(Model => Model.Column9, new { @class = "form-control", @id = "Checkbox-DocumentType" })
+                            <label for="Checkbox-DocumentType"> Document Type </label>
+                            <div class="form-group">
+                                <div class="form-line"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            @Html.CheckBoxFor(Model => Model.Column10, new { @class = "form-control", @id = "Checkbox-Description" })
+                            <label for="Checkbox-Description"> Description </label>
+                            <div class="form-group">
+                                <div class="form-line"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            @Html.CheckBoxFor(Model => Model.Column11, new { @class = "form-control", @id = "Checkbox-WeightFactor" })
+                            <label for="Checkbox-WeightFactor"> Weight Factor </label>
+                            <div class="form-group">
+                                <div class="form-line"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            @Html.CheckBoxFor(Model => Model.Column12, new { @class = "form-control", @id = "Checkbox-Progress" })
+                            <label for="Checkbox-Progress"> Progress </label>
+                            <div class="form-group">
+                                <div class="form-line"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            @Html.CheckBoxFor(Model => Model.Column13, new { @class = "form-control", @id = "Checkbox-BaseLineStart" })
+                            <label for="Checkbox-BaseLineStart"> BaseLine Start </label>
+                            <div class="form-group">
+                                <div class="form-line"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            @Html.CheckBoxFor(Model => Model.Column14, new { @class = "form-control", @id = "Checkbox-BaseLineFinished" })
+                            <label for="Checkbox-BaseLineFinished"> BaseLine Finished </label>
+                            <div class="form-group">
+                                <div class="form-line"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            @Html.CheckBoxFor(Model => Model.Column15, new { @class = "form-control", @id = "Checkbox-PlanStart" })
+                            <label for="Checkbox-PlanStart"> Plan Start </label>
+                            <div class="form-group">
+                                <div class="form-line"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            @Html.CheckBoxFor(Model => Model.Column16, new { @class = "form-control", @id = "Checkbox-PlanFinished" })
+                            <label for="Checkbox-PlanFinished"> Plan Finished </label>
+                            <div class="form-group">
+                                <div class="form-line"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            @Html.CheckBoxFor(Model => Model.Column17, new { @class = "form-control", @id = "Checkbox-ActualStart" })
+                            <label for="Checkbox-ActualStart"> Actual Start </label>
+                            <div class="form-group">
+                                <div class="form-line"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            @Html.CheckBoxFor(Model => Model.Column18, new { @class = "form-control", @id = "Checkbox-ActualFinished" })
+                            <label for="Checkbox-ActualFinished"> Actual Finished </label>
+                            <div class="form-group">
+                                <div class="form-line"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            @Html.CheckBoxFor(Model => Model.Column19, new { @class = "form-control", @id = "Checkbox-OriginalDuration" })
+                            <label for="Checkbox-OriginalDuration"> Original Duration </label>
+                            <div class="form-group">
+                                <div class="form-line"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            @Html.CheckBoxFor(Model => Model.Column20, new { @class = "form-control", @id = "Checkbox-SourceOfItem" })
+                            <label for="Checkbox-SourceOfItem"> Source Of Item </label>
+                            <div class="form-group">
+                                <div class="form-line"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            @Html.CheckBoxFor(Model => Model.Column21, new { @class = "form-control", @id = "Checkbox-ManPower" })
+                            <label for="Checkbox-ManPower"> Man Power </label>
+                            <div class="form-group">
+                                <div class="form-line"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            @Html.CheckBoxFor(Model => Model.Column22, new { @class = "form-control", @id = "Checkbox-Critical" })
+                            <label for="Checkbox-Critical"> Critical </label>
+                            <div class="form-group">
+                                <div class="form-line"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            @Html.CheckBoxFor(Model => Model.Column23, new { @class = "form-control", @id = "Checkbox-LastTransmitalNumber" })
+                            <label for="Checkbox-LastTransmitalNumber"> Last Transmital Number </label>
+                            <div class="form-group">
+                                <div class="form-line"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            @Html.CheckBoxFor(Model => Model.Column24, new { @class = "form-control", @id = "Checkbox-LastTransmitalDate" })
+                            <label for="Checkbox-LastTransmitalDate"> Last Transmital Date </label>
+                            <div class="form-group">
+                                <div class="form-line"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            @Html.CheckBoxFor(Model => Model.Column25, new { @class = "form-control", @id = "Checkbox-LastRevision" })
+                            <label for="Checkbox-LastRevision"> Last Revision </label>
+                            <div class="form-group">
+                                <div class="form-line"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            @Html.CheckBoxFor(Model => Model.Column26, new { @class = "form-control", @id = "Checkbox-LastStatus" })
+                            <label for="Checkbox-LastStatus"> Last Status </label>
+                            <div class="form-group">
+                                <div class="form-line"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            @Html.CheckBoxFor(Model => Model.Column27, new { @class = "form-control", @id = "Checkbox-LastAction" })
+                            <label for="Checkbox-LastAction"> Last Action </label>
+                            <div class="form-group">
+                                <div class="form-line"></div>
+                            </div>
+                        </div>
+                    </div>
+                        <div class="row">
+                            <button type="submit" class="btn btn-success m-t-15 m-r-15 waves-effect pull-right">ثبت</button>
+                            <a href="@Url.Action("ProjectsTasks", "ProjectsDocumentations")" type="button" class="btn btn-warning m-t-15 waves-effect">انصراف</a>
+                        </div>
+                    </div>
+                    }
+                </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#TableID").val(6);
+</script>
+
+

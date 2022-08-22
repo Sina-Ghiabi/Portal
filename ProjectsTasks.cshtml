@@ -1,0 +1,851 @@
+﻿@model Dapna.MSVPortal.Web.ViewModels.ProjectsTasksViewModel
+@using Dapna.MSVPortal.Web.Startup
+
+@{
+    ViewBag.CurrentPageName = PageNames.ProjectsTasks; // The menu item will be active for this page.
+}
+<!--div>Get Revisions TaskID To Update Tasks Table After Closing Revisions Modal</div!-->
+
+
+<form id="Edit-Revision" action="/ProjectsDocumentations/ProjectsTasksRevisionEdit" method="post">
+    <input id="ModalRevisionID" type="hidden" name="RevisionID" value="" />
+    <input id="ModalTaskID" type="hidden" name="TaskID" value="" />
+    <input id="ModalProjectCode" type="hidden" name="ProjectCode" value="" />
+    <input id="ModalDocumentNumber" type="hidden" name="DocumentNumber" value="" />
+    <input id="ModalDocumentTitle" type="hidden" name="DocumentTitle" value="" />
+</form>
+
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <div class="row" style="margin-bottom:20px">
+                    <h2>
+                        گزارشات مهندسی
+                    </h2>
+                </div>
+                <div class="row" style="margin-bottom:15px">
+                    <div class="col-md-6">
+                        <a href="javascript:;" id="Filter-Columns" class="btn btn-primary" style="margin-bottom:10px">فیلتر</a>
+                        <a href="javascript:;" id="Delete-Filter-Columns" class="btn btn-danger" style="margin-bottom:10px">حذف فیلتر</a>
+                        <a href="javascript:;" id="Chosen-Columns" class="btn btn-info" style="margin-bottom:10px">انتخاب ستون ها</a>
+                        <a href="javascript:;" id="ExportExcel" class="btn btn-success" style="margin-bottom:10px">دریافت اکسل</a>
+                        <a href="javascript:;" class="btn btn-primary" style="margin-bottom:10px"><span id="Count-Transmitals" class="badge badge-light">0</span> Transmitals </a>
+                    </div>
+                    @if (IsGranted("MsvPortal.ProjectsReports.ProjectsTasks.Create"))
+                    {
+                        <div class="col-md-6">
+                            <a href="@Url.Action("AddProjectsTasks", "ProjectsDocumentations")" class="btn btn-primary btn-create  pull-right">درج گزارش مهندسی جدید</a>
+                            <form id="ImportExcel" asp-action="ImportExcel" asp-controller="ProjectsDocumentations" method="post" enctype="multipart/form-data">
+                                <label for="ExcelFile" style="margin-left:5px; display:inline" class="btn btn-success btn-create  pull-right">Import Excel</label>
+                                <div id="Loader" class="loader pull-right" style="visibility:hidden; margin-left:10px"></div>
+                                <input id="ExcelFile" type="file" name="ExcelFile" style="visibility:hidden;display:inline" />
+                            </form>
+                        </div>
+                    }
+                </div>
+                <div class="row">
+                    <div class="col-md-9"></div>
+                    <div class="col-md-3">
+                        @Html.DropDownListFor(model => model.ProjectID , new SelectList(ViewBag.ProjectId, "Id", "Title"), "--------- انتخاب پروژه ---------", new {@Id = "ProjectID" , @class = "form-control", required = "required", data_live_search = "true" })
+                    </div>
+                </div>
+            </div>
+            <div class="body table-responsive">
+                <div class="k-rtl" style="display:table">
+                    @(Html.Kendo().Grid<Dapna.MSVPortal.Web.ViewModels.ProjectsTasksViewModel>()
+                                                                   .Name("Grid")
+                                                                   .Columns(columns =>
+                                                                   {
+                                                                       columns.Bound(c => c.TaskID).Title("TaskID").Hidden().Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                                                                       columns.Bound(c => c.ProjectName).Title("Project").Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                                                                       columns.Bound(c => c.ProjectCode).Title("Project Code").Hidden().Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                                                                       columns.Bound(c => c.CompanyName).Title("Company Name").Hidden().Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                                                                       columns.Bound(c => c.DocumentTitle).Title("Document Title").Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                                                                       columns.Bound(c => c.DocumentNumber).Title("Document Number").Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                                                                       columns.Bound(c => c.Dicipline).Title("Dicipline").Hidden().Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                                                                       columns.Bound(c => c.ResponsiblePerson).Title("ResponsiblePerson").Hidden().Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                                                                       columns.Bound(c => c.DocumentType).Title("Document Type").Hidden().Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                                                                       columns.Bound(c => c.Description).Title("Description").Hidden().Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                                                                       columns.Bound(c => c.WeightFactor).Title("Weight Factor").Hidden().Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                                                                       columns.Bound(c => c.Progress).Title("Progress").Hidden().Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                                                                       columns.Bound(c => c.BaseLineStart).Title("BaseLine Start").Hidden().Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                                                                       columns.Bound(c => c.BaseLineFinished).Title("BaseLine Finished").Hidden().Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                                                                       columns.Bound(c => c.PlanStart).Title("Plan Start").Hidden().Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                                                                       columns.Bound(c => c.PlanFinished).Title("Plan Finished").Hidden().Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                                                                       columns.Bound(c => c.ActualStart).Title("Actual Start").Hidden().Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                                                                       columns.Bound(c => c.ActualFinished).Title("Actual Finished").Hidden().Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                                                                       columns.Bound(c => c.OriginalDuration).Title("Original Duration").Hidden().Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                                                                       columns.Bound(c => c.SourceOfItem).Title("Source Of Item").Hidden().Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                                                                       columns.Bound(c => c.ManPower).Title("Man Power").Hidden().Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                                                                       columns.Bound(c => c.Critical).Title("Critical").Hidden().Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                                                                       columns.Bound(c => c.LastTransmitalNumber).Title(".Last TR No").Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                                                                       columns.Bound(c => c.LastTransmitalDate).Title(".Last TR d").Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                                                                       columns.Bound(c => c.LastRevisionNumber).Title("Last Revision").Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                                                                       columns.Bound(c => c.LastStatus).Title("Last Status").Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                                                                       columns.Bound(c => c.LastAction).Title("Last Action").Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                                                                       columns.Command(c => c.Custom("Revisions").Click("onRevisions").Visible("revisionsPermission"));
+                                                                       columns.Command(c => c.Custom("Schedule").Click("onSchedule").Visible("schedulePermission"));
+                                                                       columns.Command(c => c.Custom("ویرایش").Click("onEdit").Visible("editPermission"));
+                                                                       columns.Command(c => c.Custom("حذف").Click("onDelete").Visible("destroyPermission"));
+                                                                   })
+                                                                   .Pageable(pager => pager
+                                                                      .Input(true)
+                                                                      .Numeric(true)
+                                                                      )
+                                                                   .Navigatable()
+                                                                   .Sortable()
+                                                                   .Filterable(ftb => ftb.Mode(GridFilterMode.Row))
+                                                                   .DataSource(dataSource => dataSource
+                                                                       .Ajax()
+                                                                       .PageSize(5)
+                                                                       .ServerOperation(false)
+                                                                   )
+                    )
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="addPaymentRequestModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title" id="defaultModalLabel">پرداخت ها</h4>
+            </div>
+            <hr />
+
+            <div class="modal-body">
+                <div id="PaymentRequestTransactionsWrapper"></div>
+            </div>
+
+            <div class="modal-footer">
+                <a data-dismiss="modal" class="btn btn-warning m-t-15 waves-effect pull-right">بستن</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="editItem" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="editTransactionForm" asp-action="EditTransaction" asp-controller="Financial" method="post" enctype="multipart/form-data">
+                <div class="modal-header">
+                    @*<h4 class="modal-title" id="modal_project_title"></h4>*@
+                </div>
+                <hr />
+                <input type="hidden" id="modal_id" name="modal_id" value="" />
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="">مبلغ</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <input type="text" class="form-control" id="modal_amount" name="modal_amount" data-inputmask="'alias': 'decimal', 'groupSeparator': ','" inputmode="numeric" required="required" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="">تاریخ</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <input type="text" class="form-control simple-datepicker" id="modal_date" name="modal_date" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success m-t-15 m-r-15 waves-effect pull-right">ذخیره</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal " id="ProjectsTasksFilterColumnsModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title" id="defaultModalLabel">فیلتر ها</h4>
+            </div>
+            <hr />
+
+            <div class="modal-body">
+
+                <div id="ProjectsTasksFilterColumnsWrapper">
+
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <a data-dismiss="modal" id="Filter-Columns-Submit" class="btn btn-primary m-t-15 waves-effect pull-right" style="float:right">اعمال فیلتر</a>
+                <a data-dismiss="modal" id="Filter-NotIssueds" class="btn btn-success m-t-15 waves-effect pull-right" style="float:right; margin-left:10px">نمایش Document های بدون Revision</a>
+                @*<a data-dismiss="modal" id="Filter-Columns-Close" class="btn btn-warning m-t-15 waves-effect pull-right">انصراف</a>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+
+    //Count Number Of Transmitals
+    function CountTransmitals() {
+        $.ajax({
+            type: "POST",
+            url: "/ProjectsDocumentations/CountTransmital",
+            success: function (response) {
+                var NumberOfTransmitals = JSON.stringify(response[0].countTransmitals);
+                $("#Count-Transmitals").text(NumberOfTransmitals)
+            },
+            failure: function (response) {
+                alert(response);
+            }
+        });
+    }
+</script>
+
+<script>
+    $('#Filter-Columns-Submit').click(function () {
+
+        $.ajax({
+            type: "POST",
+            url: "/ProjectsDocumentations/ProjectsDocumentsFilter",
+            data: {
+                ReturnType: 1,
+                SearchType: $('#DropDownValue').val(),
+                ProjectID: $('#Projects-Filter').val(),
+                ProjectCode: $('#ProjectsCode-Filter').val(),
+                CompanyName: $('#CompanyName-Filter').val(),
+                DocumentTitle: $('#DocumentTitle-Filter').val(),
+                DocumentNumber: $('#DocumentNumber-Filter').val(),
+                Dicipline: $('#Dicipline-Filter').val(),
+                ResponsiblePerson: $('#ResponsiblePerson-Filter').val(),
+                DocumentType: $('#DocumentType-Filter').val(),
+                Description: $('#Description-Filter').val(),
+                Progress: $('#Progress-Filter').val(),
+                BaseLineStart: $('#BaseLineStart-Filter').val(),
+                BaseLineFinished: $('#BaseLineFinished-Filter').val(),
+                OriginalDuration: $('#OriginalDuration-Filter').val(),
+                SourceOfItem: $('#SourceOfItem-Filter').val(),
+                ManPower: $('#ManPower-Filter').val(),
+                Critical: $('#Critical-Filter').val(),
+                TransmitalNumber: $('#TransmitalNumber-Filter').val(),
+                TransmitalDate: $('#TransmitalDate-Filter').val(),
+                StartTransmitalDate: $('#Start-TransmitalDate-Filter').val(),
+                EndTransmitalDate: $('#End-TransmitalDate-Filter').val(),
+                CommentSheetNumber: $('#CommentSheetNumber-Filter').val(),
+                CommentSheetDate: $('#CommentSheetDate-Filter').val(),
+                ReplySheetNumber: $('#ReplySheetNumber-Filter').val(),
+                ReplySheetDate: $('#ReplySheetDate-Filter').val(),
+                RevisionNumber: $('#RevisionNumber-Filter').val(),
+                Status: $('#Status-Filter').val(),
+                Action: $('#Action-Filter').val(),
+            },
+            success: function (response) {
+                $('#Grid').data('kendoGrid').dataSource.data(response.Result);
+                $('#Grid').data('kendoGrid').dataSource.page(1);
+                CountTransmitals();
+            },
+            failure: function (response) {
+                alert(response);
+            }
+        });
+    })
+</script>
+
+
+<script>
+    $('#Filter-NotIssueds').click(function () {
+
+        $.ajax({
+            type: "POST",
+            url: "/ProjectsDocumentations/ProjectsDocumentsFilter",
+            data: {
+                ReturnType: 1,
+                SearchType: 6,
+                ProjectID: $('#Projects-Filter').val(),
+                ProjectCode: $('#ProjectsCode-Filter').val(),
+                CompanyName: $('#CompanyName-Filter').val(),
+                DocumentTitle: $('#DocumentTitle-Filter').val(),
+                DocumentNumber: $('#DocumentNumber-Filter').val(),
+                Dicipline: $('#Dicipline-Filter').val(),
+                ResponsiblePerson: $('#ResponsiblePerson-Filter').val(),
+                DocumentType: $('#DocumentType-Filter').val(),
+                Description: $('#Description-Filter').val(),
+                Progress: $('#Progress-Filter').val(),
+                BaseLineStart: $('#BaseLineStart-Filter').val(),
+                BaseLineFinished: $('#BaseLineFinished-Filter').val(),
+                OriginalDuration: $('#OriginalDuration-Filter').val(),
+                SourceOfItem: $('#SourceOfItem-Filter').val(),
+                ManPower: $('#ManPower-Filter').val(),
+                Critical: $('#Critical-Filter').val(),
+                TransmitalNumber: $('#TransmitalNumber-Filter').val(),
+                TransmitalDate: $('#TransmitalDate-Filter').val(),
+                StartTransmitalDate: $('#Start-TransmitalDate-Filter').val(),
+                EndTransmitalDate: $('#End-TransmitalDate-Filter').val(),
+                CommentSheetNumber: $('#CommentSheetNumber-Filter').val(),
+                CommentSheetDate: $('#CommentSheetDate-Filter').val(),
+                ReplySheetNumber: $('#ReplySheetNumber-Filter').val(),
+                ReplySheetDate: $('#ReplySheetDate-Filter').val(),
+                RevisionNumber: $('#RevisionNumber-Filter').val(),
+                Status: $('#Status-Filter').val(),
+                Action: $('#Action-Filter').val(),
+            },
+            success: function (response) {
+                $('#Grid').data('kendoGrid').dataSource.data(response.Result);
+                $('#Grid').data('kendoGrid').dataSource.page(1);
+                CountTransmitals();
+            },
+            failure: function (response) {
+                alert(response);
+            }
+        });
+    })
+</script>
+
+<div class="modal " id="ProjectsTaskRevisionsModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title" id="defaultModalLabel">Revisions</h4>
+            </div>
+            <hr />
+
+            <div class="modal-body">
+
+                <div id="ProjectsTaskRevisionsWrapper">
+
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <a data-dismiss="modal" id="RevisionsModalClose" class="btn btn-warning m-t-15 waves-effect pull-right">بستن</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+
+    $(document).ready(function () {
+
+        if ('@Html.Raw(Model.ProjectCode)'.length > 0) {
+
+            var ProjectCode = '@Html.Raw(Model.ProjectCode)';
+            var TaskID = '@Html.Raw(Model.TaskID)';
+            var DocumentNumber = '@Html.Raw(Model.DocumentNumber)';
+            var DocumentTitle = '@Html.Raw(Model.DocumentTitle)';
+
+            $.ajax({
+                type: "post",
+                data: {
+                    ProjectCode: ProjectCode,
+                    TaskID: TaskID,
+                    DocumentNumber: DocumentNumber,
+                    DocumentTitle: DocumentTitle
+                },
+                url: "/ProjectsDocumentations/ProjectsTaskRevisionsViewComponentTable",
+                success: function (response) {
+                    var dvItems = $("#ProjectsTaskRevisionsWrapper");
+                    dvItems.empty();
+                    dvItems.html(response);
+                    _telerik();
+                    $('#ProjectsTaskRevisionsModal').modal('show');
+                },
+                failure: function (response) {
+                    alert(response);
+                }
+            });
+        }
+    });
+
+
+    function onRevisions(e) {
+        e.preventDefault();
+        var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+
+        $.ajax({
+            type: "post",
+            data: {
+                ProjectCode: dataItem.ProjectCode,
+                TaskID: dataItem.TaskID,
+                DocumentNumber: dataItem.DocumentNumber,
+                DocumentTitle: dataItem.DocumentTitle
+            },
+            url: "/ProjectsDocumentations/ProjectsTaskRevisionsViewComponentTable",
+            success: function (response) {
+                var dvItems = $("#ProjectsTaskRevisionsWrapper");
+                dvItems.empty();
+                dvItems.html(response);
+                _telerik();
+                $('#ProjectsTaskRevisionsModal').modal('show');
+            },
+            failure: function (response) {
+                alert(response);
+            }
+        });
+    }
+
+    function onEdit(e) {
+        var pageId = $("#Grid").data("kendoGrid").dataSource.page();
+        var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+        window.location.href = "/ProjectsDocumentations/ProjectsTaskEdit?TaskID=" + dataItem.TaskID;
+    }
+
+    function onSchedule(e) {
+        var pageId = $("#Grid").data("kendoGrid").dataSource.page();
+        var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+        window.location.href = "/ProjectsDocumentations/ProjectsTaskSchedule?TaskID=" + dataItem.TaskID;
+    }
+
+    function onDelete(e) {
+        e.preventDefault();
+        var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+        if (confirm('آیا از حذف این مدرک اطمینان دارید؟')) {
+            $.ajax({
+
+                type: "POST",
+                url: "/ProjectsDocumentations/ProjectsTaskDelete?TaskID=" + dataItem.TaskID,
+                success: function (response) {
+                    var Result = JSON.stringify(response.data[0]);
+                    if (Result == JSON.stringify("0")) { alert("مدرک دارای تجدید نظر میباشد!"); }
+                    $('#Grid').data('kendoGrid').dataSource.read();
+                    $('#Grid').data('kendoGrid').refresh();
+                },
+                failure: function (response) {
+                    alert(response);
+                }
+            });
+        }
+    }
+
+    //After Revisions Modal Closes It Updates ProjectsTasks Table
+    $("#ProjectsTaskRevisionsModal").on('hide.bs.modal', function () {
+
+        var TaskID = $("#ModalTaskID").val();
+
+        $.ajax({
+            type: "POST",
+            url: "/ProjectsDocumentations/ProjectsTasksTableUpdate?TaskID=" + TaskID,
+            failure: function (response) {
+                alert(response);
+            }
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "/ProjectsDocumentations/ProjectsTasksTableData",
+            success: function (response) {
+                $('#Grid').data('kendoGrid').dataSource.data(response);
+                $('#Grid').data('kendoGrid').dataSource.page(1);
+                CountTransmitals();
+            },
+            failure: function (response) {
+                alert(response);
+            }
+        });
+    })
+</script>
+
+<script>
+    function revisionsPermission() {
+        return abp.auth.isGranted("MsvPortal.ProjectsReports.ProjectsTasks.ProjectsTaskRevisions");
+    }
+
+    function editPermission() {
+        return abp.auth.isGranted("MsvPortal.ProjectsReports.ProjectsTasks.Edit");
+    }
+
+    function schedulePermission() {
+        return abp.auth.isGranted("MsvPortal.ProjectsReports.ProjectsTasks.Schedule");
+    }
+
+    function destroyPermission() {
+        return abp.auth.isGranted("MsvPortal.ProjectsReports.ProjectsTasks.Delete");
+    }
+</script>
+
+<script>
+
+
+
+    //This Javascript Code Is For ProjectsTasksRevision Modal In /Shared/Components/ProjectsTasksRevisions - There Was Conflict Between Modal And This Pages Javascript That Wouldn't Let Modal Open At First So We Added Modals Javascript Here
+
+    function onRevisionEdit(e) {
+
+        var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+        var pageId = $("#Grid").data("kendoGrid").dataSource.page();
+
+        $("#ModalRevisionID").val(dataItem.RevisionID)
+        $("#Edit-Revision").submit();
+    }
+
+    function RevisionEditPermission() {
+        return abp.auth.isGranted("MsvPortal.ProjectsReports.ProjectsTasks.ProjectsTaskRevisions.Edit");
+    }
+
+    function RevisionDestroyPermission() {
+        return abp.auth.isGranted("MsvPortal.ProjectsReports.ProjectsTasks.ProjectsTaskRevisions.Delete");
+    }
+</script>
+
+<script>
+    $("#Filter-Columns").click(function () {
+        $.ajax({
+            type: "post",
+            url: "/ProjectsDocumentations/ProjectsTasksFilterColumnsViewComponent",
+            success: function (response) {
+                var dvItems = $("#ProjectsTasksFilterColumnsWrapper");
+                dvItems.empty();
+                dvItems.html(response);
+                _telerik();
+                $('#ProjectsTasksFilterColumnsModal').modal('show');
+            },
+            failure: function (response) {
+                alert(response);
+            }
+        });
+    });
+
+    $("#Delete-Filter-Columns").click(function () {
+        $.ajax({
+            type: "post",
+            url: "/ProjectsDocumentations/DeleteFilterColumns",
+            success: function () {
+                $('#Grid').data('kendoGrid').dataSource.read();
+                $('#Grid').data('kendoGrid').refresh();
+                CountTransmitals();
+            }
+        });
+    });
+
+    $("#Chosen-Columns").click(function () {
+        window.location.href = "/ProjectsDocumentations/ProjectsTasksEditChosenColumns" + "?TableID=" + 6;
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        //TaskID
+        if ('@Html.Raw(ViewBag.Column1)' == "True" ) {
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.showColumn(0)
+        } else if('@Html.Raw(ViewBag.Column1)' == "False"){
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.hideColumn(0)
+        }
+        @*//ProjectName
+        if ('@Html.Raw(ViewBag.Column2)' == "True") {
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.showColumn(1)
+        } else if('@Html.Raw(ViewBag.Column2)' == "False"){
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.hideColumn(1)
+        }*@
+        //ProjectCode
+        if ('@Html.Raw(ViewBag.Column3).ToString()' == "True") {
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.showColumn(2)
+        } else if('@Html.Raw(ViewBag.Column3).ToString()' == "False"){
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.hideColumn(2)
+        }
+        //CompanyName
+        if ('@Html.Raw(ViewBag.Column4)' == "True") {
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.showColumn(3)
+        } else if('@Html.Raw(ViewBag.Column4)' == "False"){
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.hideColumn(3)
+        }
+        //DocumentTitle
+        if ('@Html.Raw(ViewBag.Column5)' == "True") {
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.showColumn(4)
+        } else if('@Html.Raw(ViewBag.Column5)' == "False"){
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.hideColumn(4)
+        }
+        //DocumentNumber
+        if ('@Html.Raw(ViewBag.Column6)' == "True") {
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.showColumn(5)
+        } else if('@Html.Raw(ViewBag.Column6)' == "False"){
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.hideColumn(5)
+        }
+        //Dicipline
+        if ('@Html.Raw(ViewBag.Column7)' == "True") {
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.showColumn(6)
+        } else if('@Html.Raw(ViewBag.Column7)' == "False"){
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.hideColumn(6)
+        }
+        //ResponsiblePerson
+        if ('@Html.Raw(ViewBag.Column8)' == "True") {
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.showColumn(7)
+        } else if('@Html.Raw(ViewBag.Column8)' == "False"){
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.hideColumn(7)
+        }
+        //DocumentType
+        if ('@Html.Raw(ViewBag.Column9)' == "True") {
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.showColumn(8)
+        } else if('@Html.Raw(ViewBag.Column9)' == "False"){
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.hideColumn(8)
+        }
+        //Description
+        if ('@Html.Raw(ViewBag.Column10)' == "True") {
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.showColumn(9)
+        } else if('@Html.Raw(ViewBag.Column10)' == "False"){
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.hideColumn(9)
+        }
+        //WeightFactor
+        if ('@Html.Raw(ViewBag.Column11)' == "True") {
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.showColumn(10)
+        } else if('@Html.Raw(ViewBag.Column11)' == "False"){
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.hideColumn(10)
+        }
+        //Progress
+        if ('@Html.Raw(ViewBag.Column12)' == "True") {
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.showColumn(11)
+        } else if('@Html.Raw(ViewBag.Column12)' == "False"){
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.hideColumn(11)
+        }
+        //BaseLineStar
+        if ('@Html.Raw(ViewBag.Column13)' == "True") {
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.showColumn(12)
+        } else if('@Html.Raw(ViewBag.Column13)' == "False"){
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.hideColumn(12)
+        }
+        //BaseLineFinished
+        if ('@Html.Raw(ViewBag.Column14)' == "True") {
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.showColumn(13)
+        } else if('@Html.Raw(ViewBag.Column14)' == "False"){
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.hideColumn(13)
+        }
+        //PlanStart
+        if ('@Html.Raw(ViewBag.Column15)' == "True") {
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.showColumn(14)
+        } else if('@Html.Raw(ViewBag.Column15)' == "False"){
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.hideColumn(14)
+        }
+        //PlanFinished
+        if ('@Html.Raw(ViewBag.Column16)' == "True") {
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.showColumn(15)
+        } else if('@Html.Raw(ViewBag.Column16)' == "False"){
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.hideColumn(15)
+        }
+        //ActualStart
+        if ('@Html.Raw(ViewBag.Column17)' == "True") {
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.showColumn(16)
+        } else if('@Html.Raw(ViewBag.Column17)' == "False"){
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.hideColumn(16)
+        }
+        //ActualFinished
+        if ('@Html.Raw(ViewBag.Column18)' == "True") {
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.showColumn(17)
+        } else if('@Html.Raw(ViewBag.Column18)' == "False"){
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.hideColumn(17)
+        }
+        //Original Duration
+        if ('@Html.Raw(ViewBag.Column19)' == "True") {
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.showColumn(18)
+        } else if('@Html.Raw(ViewBag.Column19)' == "False"){
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.hideColumn(18)
+        }
+        //Source Of Item
+        if ('@Html.Raw(ViewBag.Column20)' == "True") {
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.showColumn(19)
+        } else if('@Html.Raw(ViewBag.Column20)' == "False"){
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.hideColumn(19)
+        }
+        //Man Power
+        if ('@Html.Raw(ViewBag.Column21)' == "True") {
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.showColumn(20)
+        } else if('@Html.Raw(ViewBag.Column21)' == "False"){
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.hideColumn(20)
+        }
+        //Critical
+        if ('@Html.Raw(ViewBag.Column22)' == "True") {
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.showColumn(21)
+        } else if('@Html.Raw(ViewBag.Column22)' == "False"){
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.hideColumn(21)
+        }
+        //LastTransmitalNumber
+        if ('@Html.Raw(ViewBag.Column23)' == "True") {
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.showColumn(22)
+        } else if('@Html.Raw(ViewBag.Column23)' == "False"){
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.hideColumn(22)
+        }
+        //LastTransmitalDate
+        if ('@Html.Raw(ViewBag.Column24)' == "True") {
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.showColumn(23)
+        } else if('@Html.Raw(ViewBag.Column24)' == "False"){
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.hideColumn(23)
+        }
+        //LastRevisionNumber
+        if ('@Html.Raw(ViewBag.Column25)' == "True") {
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.showColumn(24)
+        } else if('@Html.Raw(ViewBag.Column25)' == "False"){
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.hideColumn(24)
+        }
+        //Last Status
+        if ('@Html.Raw(ViewBag.Column26)' == "True") {
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.showColumn(25)
+        } else if('@Html.Raw(ViewBag.Column26)' == "False"){
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.hideColumn(25)
+        }
+        //Last Action
+        if ('@Html.Raw(ViewBag.Column27)' == "True") {
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.showColumn(26)
+        } else if('@Html.Raw(ViewBag.Column27)' == "False"){
+            var Grid = $("#Grid").data("kendoGrid");
+            Grid.hideColumn(26)
+        }
+    });
+
+</script>
+
+<script>
+    $('#ExcelFile').change(function () {
+        $('#Loader').css("visibility", "visible");
+        var FormFile = new FormData();
+        FormFile.append('ExcelFile', $('#ExcelFile')[0].files[0]);
+
+        //for (var i = 0; i != files.length; i++) { formData.append("files", files[i]); } //If User Selected Multiple Files
+
+        $.ajax({
+            url: '/ProjectsDocumentations/ImportExcel',
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            data: FormFile,
+            success: function (Response) {
+                $('#Loader').css("visibility", "hidden");
+                $('#Grid').data('kendoGrid').dataSource.read();
+                $('#Grid').data('kendoGrid').refresh();
+                $('#ExcelFile').val("");
+                CountTransmitals();
+                //alert(JSON.stringify(Response.result.existedTasks));
+                //alert(JSON.stringify(Response.result.erroredTasks));
+            }
+        });
+    });
+</script>
+
+<script>
+    $("#ExportExcel").click(function () {
+
+        window.location = "/ProjectsDocumentations/ExportExcel";
+
+    });
+</script>
+
+<script>
+    $('#ProjectID').on('change', function () {
+        $.ajax({
+            type: "POST",
+            url: "/ProjectsDocumentations/ProjectsDocumentsFilter",
+            data: {
+                ReturnType: 1,
+                SearchType: 3,
+                ProjectID: $('#ProjectID').val(),
+                ProjectCode: null,
+                CompanyName: null,
+                DocumentTitle: null,
+                DocumentNumber: null,
+                Dicipline: null,
+                ResponsiblePerson: null,
+                DocumentType: null,
+                Description: null,
+                Progress: null,
+                BaseLineStart: null,
+                BaseLineFinished: null,
+                OriginalDuration: null,
+                SourceOfItem: null,
+                ManPower: null,
+                Critical: null,
+                TransmitalNumber: null,
+                TransmitalDate: null,
+                StartTransmitalDate: null,
+                EndTransmitalDate: null,
+                CommentSheetNumber: null,
+                CommentSheetDate: null,
+                ReplySheetNumber: null,
+                ReplySheetDate: null,
+                RevisionNumber: null,
+                Status: null,
+                Action: null,
+            },
+            success: function (response) {
+                $('#Grid').data('kendoGrid').dataSource.data(response.Result);
+                $('#Grid').data('kendoGrid').dataSource.page(1);
+                CountTransmitals();
+            },
+            failure: function (response) {
+                alert(response);
+            }
+        });
+    });
+</script>
+
+<style>
+    .loader {
+        border: 4px solid #f3f3f3; /* Light grey */
+        border-top: 4px solid #32CD32; /* Green */
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        animation: spin 1s linear infinite;
+    }
+</style>

@@ -1,0 +1,209 @@
+﻿@model Dapna.MSVPortal.Web.ViewModels.ProjectsTasksRevisionsViewModel
+@{
+    ViewBag.CurrentPageName = PageNames.AddProjectsTasksRevision; // The menu item will be active for this page.
+}
+
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h2>
+                            درج تجدید نظر
+                        </h2>
+                    </div>
+                    <div class="col-md-8">
+                    </div>
+                </div>
+
+            </div>
+            <div class="body">
+                <div class="row">
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(model => model.FormType, new { @Id = "FormType", @class = "form-control", placeholder = "", required = "required" })
+                    @Html.HiddenFor(model => model.ProjectCode, new { @Id = "ProjectCode", @class = "form-control", placeholder = "", required = "required" })
+                    @Html.HiddenFor(model => model.TaskID, new { @Id = "TaskID", @class = "form-control", placeholder = "", required = "required" })
+                    @Html.HiddenFor(model => model.DocumentNumber, new { @Id = "DocumentNumber", @class = "form-control", placeholder = "", required = "required" })
+                    @Html.HiddenFor(model => model.DocumentTitle, new { @Id = "DocumentTitle", @class = "form-control", placeholder = "", required = "required" })
+                    <div class="col-md-4">
+                        <label for=""> Transmital Number </label>
+                        <div class="form-group">
+                            <button id="Button" type="button" class="btn btn-primary m-t-15 waves-effect pull-right" style="position: absolute; left: 17px; top: 24px; margin-top: 0; height: 28px; z-index: 1;">ارسال</button>
+                            <div class="form-line">
+                                @Html.TextBoxFor(model => model.TransmitalNumber, new { @Id = "TransmitalNumber", @class = "form-control", placeholder = "", required = "required" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="k-rtl">
+                    @(Html.Kendo().Grid<Dapna.MSVPortal.Web.ViewModels.ProjectsTasksRevisionsViewModel>()
+                                                                   .Name("RevisionsGrid")
+                                                                   .Columns(columns =>
+                                                                   {
+                                                                       columns.Bound(c => c.TransmitalNumber).Title("Transmital Number").Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                                                                       columns.Bound(c => c.TransmitalDate).Title("Transmital Date").Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                                                                       columns.Bound(c => c.CommentSheetNumber).Title("Comment Sheet Number").Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                                                                       columns.Bound(c => c.CommentSheetDate).Title("Comment Sheet Date").Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                                                                       columns.Bound(c => c.ReplySheetNumber).Title("Reply Sheet Number").Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                                                                       columns.Bound(c => c.ReplySheetDate).Title("Reply Sheet Date").Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                                                                       columns.Bound(c => c.RevisionNumber).Title("Revision Number").Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                                                                       columns.Bound(c => c.Status).Title("Status").Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                                                                       columns.Bound(c => c.Action).Title("Action").Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                                                                       columns.Command(c => c.Custom("انتخاب").Click("ChosenRevision"));
+                                                                   })
+                                                                   .Pageable()
+                                                                   .Navigatable()
+                                                                   .Sortable()
+                                                                   .Filterable(ftb => ftb.Mode(GridFilterMode.Row))
+                                                                   .Scrollable()
+                                                                   .DataSource(dataSource => dataSource
+                                                                       .Ajax()
+                                                                       .PageSize(10)
+                                                                       .ServerOperation(false)
+                                                                   )
+                    )
+                </div>
+                <div class="modal-footer">
+                    <a data-dismiss="modal" id="Cancel-Form" class="btn btn-warning m-t-15 waves-effect pull-right">بازگشت</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+        $('#Button').click(function () {
+            ReadFromKatibeh();
+        })
+
+        $(document).on('keypress', function (e) {
+            if (e.which == 13) {
+                ReadFromKatibeh();
+            }
+        });
+
+        function ReadFromKatibeh() {
+            $.ajax({
+                type: "POST",
+                url: "/ProjectsDocumentations/ReadFromKatibeh",
+                data: {
+                    ProjectCode: ProjectCode,
+                    DocumentNumber: DocumentNumber,
+                    TransmitalNumber: $('#TransmitalNumber').val()
+                },
+                success: function (response) {
+                    $("#RevisionsGrid").data('kendoGrid').dataSource.data([]);
+                    $('#RevisionsGrid').data('kendoGrid').dataSource.data(response);
+                },
+                failure: function (response) {
+                    alert(response);
+                }
+            });
+        }
+</script>
+
+<script>
+    //Submit-Form
+
+        var FormType = "1";
+        var ProjectCode = '@Html.Raw(Model.ProjectCode)';
+        var TaskID = '@Html.Raw(Model.TaskID)';
+        var DocumentNumber = '@Html.Raw(Model.DocumentNumber)';
+        var DocumentTitle = '@Html.Raw(Model.DocumentTitle)';
+
+        function ChosenRevision(e) {
+            e.preventDefault();
+            var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+
+            if (confirm("آیا از انتخاب خود مطمئن هستید ؟")) {
+                $.ajax({
+                    type: "POST",
+                    url: "/ProjectsDocumentations/ChosenRevisionsFromKatibeh",
+                    data: {
+                        FormType: FormType,
+                        ProjectCode: ProjectCode,
+                        TaskID: TaskID,
+                        DocumentNumber: DocumentNumber,
+                        DocumentTitle: DocumentTitle,
+                        TransmitalNumber: dataItem.TransmitalNumber,
+                        TransmitalDate: dataItem.TransmitalDate,
+                        CommentSheetNumber: dataItem.CommentSheetNumber,
+                        CommentSheetDate: dataItem.CommentSheetDate,
+                        ReplySheetNumber: dataItem.ReplySheetNumber,
+                        ReplySheetDate: dataItem.ReplySheetDate,
+                        RevisionNumber: dataItem.RevisionNumber,
+                        Status: dataItem.Status,
+                        Action: dataItem.Action
+                    },
+                    success: function (response) {
+
+                        if (JSON.stringify(response.Result) == JSON.stringify("0"))
+                        {
+                            alert("این شماره ترنسمیتال برای این مدرک قبلا ثبت شده است!")
+                        }
+                        else if (JSON.stringify(response.Result) == JSON.stringify("1")) {
+
+                            window.location.href = "/ProjectsDocumentations/ProjectsTasks";
+                        }
+                    },
+                    failure: function (response) {
+                        alert(response);
+                    }
+                });
+
+            }
+        }
+</script>
+
+<script>
+      //Cancel-Form
+
+    $('#Cancel-Form').click(function () {
+
+        var FormType = "0";
+        var ProjectCode = '@Html.Raw(Model.ProjectCode)';
+        var TaskID = '@Html.Raw(Model.TaskID)';
+        var DocumentNumber = '@Html.Raw(Model.DocumentNumber)';
+        var DocumentTitle = '@Html.Raw(Model.DocumentTitle)';
+        var TransmitalNumber = "";
+        var TransmitalDate = "";
+        var CommentSheetNumber = "";
+        var CommentSheetDate = "";
+        var ReplySheetNumber = "";
+        var ReplySheetDate = "";
+        var RevisionNumber = "";
+        var Status = "";
+        var Action = "";
+
+            $.ajax({
+                type: "post",
+                url: "/ProjectsDocumentations/ChosenRevisionsFromKatibeh",
+                data: {
+                    FormType: FormType,
+                    ProjectCode: ProjectCode,
+                    TaskID: TaskID,
+                    DocumentNumber: DocumentNumber,
+                    DocumentTitle: DocumentTitle,
+                    TransmitalNumber: TransmitalNumber,
+                    TransmitalDate: TransmitalDate,
+                    CommentSheetNumber: CommentSheetNumber,
+                    CommentSheetDate: CommentSheetDate,
+                    ReplySheetNumber: ReplySheetNumber,
+                    ReplySheetDate: ReplySheetDate,
+                    RevisionNumber: RevisionNumber,
+                    Status: Status,
+                    Action: Action
+                },
+                success: function (response) {
+
+                    if (JSON.stringify(response.Result) == JSON.stringify("1")) {
+
+                        window.location.href = "/ProjectsDocumentations/ProjectsTasks";
+
+                    }
+                },
+            })
+        });
+</script>

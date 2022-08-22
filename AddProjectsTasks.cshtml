@@ -1,0 +1,108 @@
+﻿@model Dapna.MSVPortal.Web.ViewModels.ProjectsTasksViewModel
+@{
+    ViewData["Title"] = "Create";
+    ViewBag.CurrentPageName = PageNames.AddProjectsTask; // The menu item will be active for this page.
+}
+
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h2>
+                            درج گزارش مهندسی جدید
+                        </h2>
+                    </div>
+                    <div class="col-md-8">
+                    </div>
+                </div>
+
+            </div>
+            <div class="body">
+
+                @using (Html.BeginForm("AddProjectsTasksFunction", "ProjectsDocumentations", FormMethod.Post, new { @class = "", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="">Project</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    @Html.DropDownListFor(model => model.ProjectID, new SelectList(ViewBag.ProjectId, "Id", "Title"), "-- انتخاب پروژه --", new { @class = "form-control", required = "required", data_live_search = "true" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="">Company Name</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    @Html.TextBoxFor(model => model.CompanyName, new { @class = "form-control", placeholder = "", required = "required" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="">Document Title</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    @Html.TextBoxFor(model => model.DocumentTitle, new { @class = "form-control", placeholder = "", required = "required" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="">Document Number</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    @Html.TextBoxFor(model => model.DocumentNumber, new { @class = "form-control", placeholder = "", required = "required" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="">Dicipline</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    @Html.DropDownListFor(model => model.Dicipline, Html.GetEnumSelectList(typeof(ProjectsTasksDiciplineTypes)), "--- انتخاب ---", new { @class = "form-control", required = "required" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="">Responsible Person</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    @Html.TextBoxFor(model => model.ResponsiblePerson, new { @class = "form-control", placeholder = "" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="">Documen Type</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    @Html.DropDownListFor(model => model.DocumentType, Html.GetEnumSelectList(typeof(ProjectsTasksDocumentTypes)), "--- انتخاب ---", new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="">Description</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    @Html.TextBoxFor(model => model.Description, new { @class = "form-control", placeholder = "" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br>
+                    <a href="@Url.Action("ProjectsTasks", "ProjectsDocumentations")" type="button" class="btn btn-warning m-t-15 waves-effect">انصراف</a>
+                    <button id="Submit-Button" type="submit" class="btn btn-primary m-t-15 waves-effect pull-right">ذخیره و ثبت</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,155 @@
+﻿@model Dapna.MSVPortal.Web.ViewModels.ProjectsTasksRevisionsViewModel
+@{
+    ViewBag.CurrentPageName = PageNames.ProjectsTasksRevisionEdit; // The menu item will be active for this page.
+}
+
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h2>
+                            ویرایش تجدید نظر
+                        </h2>
+                    </div>
+                    <div class="col-md-8">
+                    </div>
+                </div>
+
+            </div>
+            <div class="body">
+
+                @using (Html.BeginForm("ProjectsTasksRevisionEditFunction", "ProjectsDocumentations", FormMethod.Post, new { @class = "", role = "form" }))
+                {
+                    <div class="row">
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(model => model.FormType, new { @Id = "Submit-FormType", @class = "form-control", placeholder = "", required = "required" })
+                        @Html.HiddenFor(model => model.RevisionID, new { @class = "form-control", placeholder = "", required = "required" })
+                        @Html.HiddenFor(model => model.TaskID, new { @class = "form-control", placeholder = "", required = "required" })
+                        @Html.HiddenFor(model => model.ProjectCode, new { @class = "form-control", placeholder = "", required = "required" })
+                        @Html.HiddenFor(model => model.DocumentNumber, new { @class = "form-control", placeholder = "", required = "required" })
+                        @Html.HiddenFor(model => model.DocumentTitle, new { @class = "form-control", placeholder = "", required = "required" })
+                        <div class="col-md-6">
+                            <label for="">Transmital Number</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    @Html.TextBoxFor(model => model.TransmitalNumber, new { @class = "form-control", placeholder = "", required = "required" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="">Transmital Date</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    @Html.TextBoxFor(model => model.TransmitalDate, new { @class = "form-control simple-datepicker", placeholder = "", autocomplete = "off", required = "required" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="">Comment Sheet Number</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    @Html.TextBoxFor(model => model.CommentSheetNumber, new { @class = "form-control", placeholder = "" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="">Comment Sheet Date</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    @Html.TextBoxFor(model => model.CommentSheetDate, new { @class = "form-control simple-datepicker", placeholder = "", autocomplete = "off" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="">Reply Sheet Number</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    @Html.TextBoxFor(model => model.ReplySheetNumber, new { @class = "form-control", placeholder = "" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="">Reply Sheet Date</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    @Html.TextBoxFor(model => model.ReplySheetDate, new { @class = "form-control simple-datepicker", placeholder = "", autocomplete = "off" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="">Revision</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    @Html.TextBoxFor(model => model.RevisionNumber, new { @class = "form-control", placeholder = "" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="">Status</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    @Html.DropDownListFor(model => model.Status, Html.GetEnumSelectList(typeof(ProjectsTasksStatusTypes)), "--- انتخاب ---", new { @Id = "Status", @class = "form-control", required = "required" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="">Action</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    @Html.DropDownListFor(model => model.Action, Html.GetEnumSelectList(typeof(ProjectsTasksActionTypes)), "--- انتخاب ---", new { @Id = "Action", @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <button type="submit" class="btn btn-primary m-t-15 waves-effect pull-left">ذخیره و ثبت</button>
+                        <a id="Cancel-Button" class="btn btn-warning m-t-15 waves-effect pull-right">انصراف</a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@using (Html.BeginForm("ProjectsTasksRevisionEditFunction", "ProjectsDocumentations", FormMethod.Post, new { @Id = "Cancel-Form", @class = "", role = "form" }))
+{
+    //FormType Is To Check If User Submitted The Form Or Canceled It
+    @Html.HiddenFor(model => model.FormType, new { @Id = "Cancel-FormType" })
+    @Html.HiddenFor(model => model.RevisionID)
+    @Html.HiddenFor(model => model.TaskID)
+    @Html.HiddenFor(model => model.ProjectCode)
+    @Html.HiddenFor(model => model.DocumentNumber)
+    @Html.HiddenFor(model => model.DocumentTitle)
+    @Html.HiddenFor(model => model.TransmitalNumber)
+    @Html.HiddenFor(model => model.TransmitalDate)
+    @Html.HiddenFor(model => model.CommentSheetNumber)
+    @Html.HiddenFor(model => model.CommentSheetDate)
+    @Html.HiddenFor(model => model.ReplySheetNumber)
+    @Html.HiddenFor(model => model.ReplySheetDate)
+    @Html.HiddenFor(model => model.RevisionNumber)
+    @Html.HiddenFor(model => model.Status)
+    @Html.HiddenFor(model => model.Action)
+}
+
+<script>
+
+    $(document).ready(function () {
+        $("#Submit-FormType").val("1");
+        $("#Cancel-FormType").val("0");
+    })
+
+    $('#Cancel-Button').click(function () {
+        $("#Cancel-Form").submit();
+    })
+</script>

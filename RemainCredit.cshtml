@@ -1,0 +1,245 @@
+﻿@{
+    ViewBag.CurrentPageName = PageNames.RemainCredit; // The menu item will be active for this page.
+}
+
+
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <div class="row">
+                    <div class="row col-md-12">
+                        <div class="col-md-4 pull-left">
+                            <h2>
+                                مانده بستانکار
+                            </h2>
+                        </div>
+                    </div>
+                    <div class="row col-md-12">
+                        <div class="col-md-2">
+                        </div>
+                        <div class="col-md-2">
+                            @Html.DropDownList("ProjectId", new SelectList(ViewBag.ProjectID, "Id", "Title"), new { @Id = "FilterProjectID", @class = "form-control", data_live_search = "true", multiple = "true", data_title = "-- انتخاب پروژه --" })
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group mb0">
+                                <div class="form-line">
+                                    <input type="text" class="form-control" id="FilterPayTo" placeholder="در وجه" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group mb0">
+                                <div class="form-line">
+                                    <input type="text" class="form-control" id="FilterFourthLevelCode" placeholder="کد سطح چهارم" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <select id="SortType" class="form-control">
+                                <option value="0">-- مرتب سازی --</option>
+                                <option value="1">مانده بدهکار (صعودی)</option>
+                                <option value="2">مانده بدهکار(نزولی)</option>
+                                <option value="3">مانده بستانکار (صعودی)</option>
+                                <option value="4">مانده بستانکار (نزولی)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 pull-right">
+                            @if (IsGranted("MsvPortal.Liquidity.RemainCredit.ImportExcel"))
+                            {
+
+                                <form id="ImportExcel" asp-action="RemainCreditImportExcel" asp-controller="Financial" method="post" enctype="multipart/form-data">
+                                    <label for="ExcelFile" style="margin-left:5px; display:inline" class="btn btn-success btn-create  pull-right">Import Excel</label>
+                                    <div id="Loader" class="loader pull-right" style="visibility:hidden; margin-left:10px"></div>
+                                    <input id="ExcelFile" type="file" name="ExcelFile" style="visibility:hidden;display:inline" />
+                                </form>
+
+                            }
+                        </div>
+                            <div class="col-md-8 pull-right">
+                                <a href="javascript:;" id="Filter" class="btn btn-primary">اعمال فیلتر</a>
+                                <button href="javascript:;" id="ShowAll" class="btn btn-danger" value="0">عدم نمایش همه</button>
+                                <a href="javascript:;" id="ExportExcel" class="btn btn-info">دریافت اکسل</a>
+                            </div>
+                        </div>
+                </div>
+            </div>
+            <div class="body">
+
+                <div class="k-rtl table-responsive">
+                    @(Html.Kendo().Grid<Dapna.MSVPortal.Web.ViewModels.RemainCreditViewModel>()
+                        .Name("RemainCreditGrid")
+                        .Columns(columns =>
+                        {
+                            columns.Bound(c => c.ProjectName).Title("پروژه").Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains))).Width(180);
+                            columns.Bound(c => c.FourthLevelCode).Title("کد سطح چهارم").Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                            columns.Bound(c => c.PayTo).Title("در وجه").Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                            columns.Bound(c => c.RemainDebtAmount).Title("مانده بدهکار").Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                            columns.Bound(c => c.RemainCreditAmount).Title("مانده بستانکار").Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                            columns.Bound(c => c.UploadDate).Title("تاریخ بارگزاری").Filterable(ftb => ftb.Cell(cell => cell.Operator("contains").SuggestionOperator(FilterType.Contains)));
+                        })
+                        .Pageable()
+                        .Filterable(ftb => ftb.Mode(GridFilterMode.Row))
+                        .DataSource(dataSource => dataSource
+                        .Ajax()
+                        .PageSize(10)
+                        .ServerOperation(false)
+                        .Read(read => read.Action("RemainCreditTableData", "Financial"))
+                        )
+                    )
+                </div>
+                <div class="row clearfix">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <table class="table table-bordered bg-danger">
+                            <tr>
+                                <td width="1000">مانده بدهکار :</td>
+                                <td id="TotalDebtAmount" class="text-left">0</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <table class="table table-bordered bg-success">
+                            <tr>
+                                <td width="1000">مانده بستانکار:</td>
+                                <td id="TotalCreditAmount" class="text-left">0</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    $(document).ready(function () {
+        $.ajax({
+            type: "POST",
+            url: "/Financial/TotalCreditAndDebt",
+            success: function (response) {
+                GetTotalCreditAndDebt();
+            },
+            failure: function (response) {
+                alert(response);
+            }
+        });
+    })
+
+    $('#ExcelFile').change(function () {
+        $('#Loader').css("visibility", "visible");
+        var FormFile = new FormData();
+        FormFile.append('ExcelFile', $('#ExcelFile')[0].files[0]);
+
+        //for (var i = 0; i != files.length; i++) { formData.append("files", files[i]); } //If User Selected Multiple Files
+
+        $.ajax({
+            url: '/Financial/RemainCreditImportExcel',
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            data: FormFile,
+            success: function (Response) {
+                $('#Loader').css("visibility", "hidden");
+                $('#RemainCreditGrid').data('kendoGrid').dataSource.page(1);
+                $('#RemainCreditGrid').data('kendoGrid').dataSource.read();
+                $('#RemainCreditGrid').data('kendoGrid').refresh();
+                $('#ExcelFile').val("");
+                GetTotalCreditAndDebt();
+                alert(JSON.stringify(Response.result));
+            }
+        });
+    });
+
+    $("#ShowAll").click(function () {
+
+        var ShowAllValue = $("#ShowAll").val();
+
+        if (ShowAllValue == 0) {
+            $("#ShowAll").val(1);
+            $("#ShowAll").text("نمایش همه");
+            $("#ShowAll").removeClass("btn-danger");
+            $("#ShowAll").addClass("btn-success");
+        }
+        else if (ShowAllValue == 1) {
+            $("#ShowAll").val(0);
+            $("#ShowAll").text("عدم نمایش همه");
+            $("#ShowAll").removeClass("btn-success");
+            $("#ShowAll").addClass("btn-danger");
+        }
+        Filter();
+    })
+
+    $("#ExportExcel").click(function () {
+        var url =
+            "ProjectIDs=" + $('#FilterProjectID').val() +
+            "&PayTo=" + $('#FilterPayTo').val() +
+            "&FourthLevelCode=" + $('#FilterFourthLevelCode').val() +
+            "&SortType=" + $('#SortType').val() +
+            "&ShowAll=" + $('#ShowAll').val();
+        window.location = "/Financial/RemindCreditExportExcel?" + url;
+    });
+
+    $('#Filter').click(function () { Filter(); });
+
+</script>
+
+<script>
+
+    function Filter() {
+        $.ajax({
+            type: "POST",
+            url: "/Financial/RemainCreditFilter",
+            data: {
+                ProjectIDs: $('#FilterProjectID').val(),
+                PayTo: $('#FilterPayTo').val(),
+                FourthLevelCode: $('#FilterFourthLevelCode').val(),
+                SortType: $('#SortType').val(),
+                ShowAll: $('#ShowAll').val()
+            },
+            success: function (response) {
+                $('#RemainCreditGrid').data('kendoGrid').dataSource.page(1);
+                $('#RemainCreditGrid').data('kendoGrid').dataSource.data(response);
+                GetTotalCreditAndDebt();
+            },
+            failure: function (response) {
+                alert(response);
+            }
+        });
+    }
+
+    function GetTotalCreditAndDebt() {
+        $.ajax({
+            type: "POST",
+            url: "/Financial/TotalCreditAndDebt",
+            data: {
+                ProjectIDs: $('#FilterProjectID').val(),
+                PayTo: $('#FilterPayTo').val(),
+                FourthLevelCode: $('#FilterFourthLevelCode').val()
+            },
+            success: function (response) {
+                $('#TotalDebtAmount').text(response.result[0].totalDebtAmount);
+                $('#TotalCreditAmount').text(response.result[0].totalCreditAmount);
+            },
+            failure: function (response) {
+                alert(response);
+            }
+        });
+    }
+</script>
+
+<style>
+    .loader {
+        border: 4px solid #f3f3f3; /* Light grey */
+        border-top: 4px solid #32CD32; /* Green */
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        animation: spin 1s linear infinite;
+    }
+</style>

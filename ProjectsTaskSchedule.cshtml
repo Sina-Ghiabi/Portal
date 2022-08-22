@@ -1,0 +1,142 @@
+﻿@model Dapna.MSVPortal.Web.ViewModels.ProjectsTasksViewModel
+@{
+    ViewBag.CurrentPageName = PageNames.ProjectsTaskSchedule; // The menu item will be active for this page.
+}
+
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h2>
+                            
+                        </h2>
+                    </div>
+                    <div class="col-md-8">
+                    </div>
+                </div>
+
+            </div>
+            <div class="body">
+
+                @using (Html.BeginForm("ProjectsTaskScheduleFunction", "ProjectsDocumentations", FormMethod.Post, new { @class = "", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(model => model.TaskID, new { @class = "form-control", placeholder = "", required = "required" })
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="">WeightFactor</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    @Html.TextBoxFor(model => model.WeightFactor, new { @class = "form-control", placeholder = "", data_inputmask = "'alias': 'decimal'", inputmode = "numeric" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="">Progress</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    @Html.TextBoxFor(model => model.Progress, new { @class = "form-control", placeholder = "", data_inputmask = "'alias': 'decimal'", inputmode = "numeric" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="">BaseLineStart</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    @Html.TextBoxFor(model => model.BaseLineStart, new { @class = "form-control simple-datepicker", placeholder = "", autocomplete = "off" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="">BaseLineFinish</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    @Html.TextBoxFor(model => model.BaseLineFinished, new { @class = "form-control simple-datepicker", placeholder = "", autocomplete = "off" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="">Plan Start</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    @Html.TextBoxFor(model => model.PlanStart, new { @class = "form-control simple-datepicker", placeholder = "", autocomplete = "off" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="">Plan Finished</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    @Html.TextBoxFor(model => model.PlanFinished, new { @class = "form-control simple-datepicker", placeholder = "", autocomplete = "off" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="">Actual Start</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    @Html.TextBoxFor(model => model.ActualStart, new { @class = "form-control simple-datepicker", placeholder = "", autocomplete = "off" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="">Actual Finished</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    @Html.TextBoxFor(model => model.ActualFinished, new { @class = "form-control simple-datepicker", placeholder = "", autocomplete = "off" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="">Original Duration</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    @Html.TextBoxFor(model => model.OriginalDuration, new { @class = "form-control", placeholder = "", data_inputmask = "'alias': 'decimal', 'groupSeparator': ','", inputmode = "numeric" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="">Source Of Item</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    @Html.DropDownListFor(model => model.SourceOfItem, Html.GetEnumSelectList(typeof(ProjectsTasksSourceOfItemTypes)), "--- انتخاب ---", new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="">ManPower</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    @Html.TextBoxFor(model => model.ManPower, new { @class = "form-control", placeholder = "", data_inputmask = "'alias': 'decimal', 'groupSeparator': ','", inputmode = "numeric" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            @Html.CheckBoxFor(model => model.Critical, new { @class = "form-control simple-datepicker", @id = "Checkbox-Critical" })
+                            <label for="Checkbox-Critical"> Critical</label>
+                            <div class="form-group">
+                                <div class="form-line"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <a href="@Url.Action("ProjectsTasks", "ProjectsDocumentations")" type="button" class="btn btn-warning m-t-15 waves-effect">انصراف</a>
+                    <button type="submit" class="btn btn-primary m-t-15 waves-effect pull-right">ذخیره و ثبت</button>
+                }
+            </div>
+                </div>
+    </div>
+</div>
